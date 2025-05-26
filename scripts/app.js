@@ -7,16 +7,21 @@ function renderProjects(projects) {
         return;
     }
     container.innerHTML = projects.map(item => `
-      <div class="project-card">
-        <h3>${item.title}</h3>
-        <p><strong>Автор:</strong> ${item.author}</p>
-        <p><strong>Школа:</strong> ${item.school}</p>
-        <p><strong>Відділення:</strong> ${item.department}</p>
-        <p><strong>Секція:</strong> ${item.section}</p>
-        <p><strong>Область:</strong> ${item.region}</p>
-        <p>${item.description}</p>
-        <a href="${item.contact_link}" target="_blank">Контакти</a> |
-        <a href="${item.poster_link}" target="_blank">Постер</a>
+      <div class="project-card" style="display: flex; align-items: flex-start; gap: 20px;">
+        <div style="flex: 1;">
+            <h3>${item.title}</h3>
+            <p><strong>Автор:</strong> ${item.author}</p>
+            <p><strong>Школа:</strong> ${item.school}</p>
+            <p><strong>Відділення:</strong> ${item.department}</p>
+            <p><strong>Секція:</strong> ${item.section}</p>
+            <p><strong>Область:</strong> ${item.region}</p>
+            <p>${item.description}</p>
+            <a href="${item.contact_link}" target="_blank">Контакти</a> |
+            <a href="${item.poster_link}" target="_blank">Постер</a>
+        </div>
+        <div style="min-width:150px;">
+            <img src="${item.image}" alt="${item.title}" style="max-width:150px;max-height:150px;object-fit:cover;">
+        </div>
       </div>
     `).join('');
 }
@@ -43,7 +48,11 @@ function filterProjects() {
     if (section) filtered = filtered.filter(p => p.section === section);
     if (department) filtered = filtered.filter(p => p.department === department);
     if (region) filtered = filtered.filter(p => p.region === region);
-    renderProjects(filtered);
+    if (section || department || region) {
+        renderProjects(filtered);
+    } else {
+        document.getElementById('projects').innerHTML = '';
+    }
 }
 
 fetch('js/data.json')
@@ -56,5 +65,5 @@ fetch('js/data.json')
     document.getElementById('sectionFilter').onchange = filterProjects;
     document.getElementById('departmentFilter').onchange = filterProjects;
     document.getElementById('regionFilter').onchange = filterProjects;
-    renderProjects(data);
+    document.getElementById('projects').innerHTML = '';
   });
